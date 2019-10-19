@@ -8,10 +8,10 @@ class Receiver extends Player{
         this.options.color = "#00FF00";
         this.options.vel = [0, -this.options.speed];
         this.routes = {
-            slant: [ this.options.speed * 200, Utils.DIRS.NE ],
+            slant: [ 200, Utils.DIRS.NE ],
             go: [],
-            post: [ this.options.speed * 1000, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.NE ],
-            curl: [ this.options.speed * 800, Utils.DIRS.STOP]
+            post: [ 1000, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.NE ],
+            curl: [ 800, Utils.DIRS.STOP]
         }
         this.route_step = 0;
         this.distance_traveled = 0;
@@ -23,8 +23,8 @@ class Receiver extends Player{
         ctx.arc(this.options.pos[0], this.options.pos[1], this.options.radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = this.options.color;
         // ctx.font = '50px serif';
-        // ctx.fillText = (this.options.button, this.options.pos[0], this.options.pos[1])
         ctx.fill();
+        ctx.fillText = (this.options.button, this.options.pos[0], this.options.pos[1])
     }
 
     move(){

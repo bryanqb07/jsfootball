@@ -12,8 +12,8 @@ class Game{
         this.los_x = 600; // los = line of scrimmage
         this.los_y = 250;
         this.center = new OffensiveLineman({ pos: [this.los_x, this.los_y], vel: [0, 0], radius: 20, color: "#00FF00" });
-        this.quarterback = new Quarterback({ pos: [this.los_x, this.los_y + 200], vel: [0, 0], radius: 20, color: "#00FF00" });
-        this.receiver1 = new Receiver({ pos: [this.los_x - 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 5, button: "a" });
+        this.quarterback = new Quarterback({ pos: [this.los_x, this.los_y + 200], vel: [0, 0], radius: 20, color: "#00FF00", speed: 10 });
+        this.receiver1 = new Receiver({ pos: [this.los_x - 400, this.los_y], radius: 20, color: "#00FF00", route: "curl", speed: 15, button: "a" });
         this.football = new Football({pos: [this.los_x, this.los_y], vel: [0, 50]})
         this.skillPlayers = [this.quarterback, this.receiver1];
         this.allObjects = [this.center, this.quarterback, this.receiver1, this.football];
@@ -60,10 +60,18 @@ class Game{
         console.log(this.football.options.pos);
         if(ballCarrier){
             const direction = Utils.DIRS[dir];
-            this.football.options.pos[0] += 20 * direction[0];
-            this.football.options.pos[1] += 20 * direction[1];
-            ballCarrier.options.pos[0] += 20 * direction[0];
-            ballCarrier.options.pos[1] += 20 * direction[1];
+            const speed = ballCarrier.options.speed
+            this.football.options.pos[0] += speed * direction[0];
+            this.football.options.pos[1] += speed * direction[1];
+            ballCarrier.options.pos[0] += speed * direction[0];
+            ballCarrier.options.pos[1] += speed * direction[1];
+        }
+    }
+
+    passBall(target_receiver){
+        const ballCarrier = this.findBallCarrier();
+        if(ballCarrier.options.canPass){
+            this.football.options.vel = [-15, -15];
         }
     }
 }
