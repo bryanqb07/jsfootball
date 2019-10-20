@@ -8,10 +8,10 @@ class Receiver extends Player{
         this.options.color = "#00FF00";
         this.options.vel = [0, -this.options.speed];
         this.routes = {
-            slant: [ 200, Utils.DIRS.NE ],
+            slant: [ this.options.speed * 2, Utils.DIRS.NE ],
             go: [],
-            post: [ 1000, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.N, Utils.DIRS.NE ],
-            curl: [ 800, Utils.DIRS.STOP]
+            post: [ this.options.speed * 7, Utils.DIRS.NE ],
+            curl: [ this.options.speed * 5, Utils.DIRS.STOP]
         }
         this.route_step = 0;
         this.distance_traveled = 0;
@@ -42,7 +42,7 @@ class Receiver extends Player{
         }
         this.options.pos[0] += this.options.vel[0]
         this.options.pos[1] += this.options.vel[1]
-        this.distance_traveled += this.options.pos[1];
+        this.distance_traveled += this.options.speed;
     }
 }
 

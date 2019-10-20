@@ -15,11 +15,18 @@ class Game{
         this.quarterback = new Quarterback({ pos: [this.los_x, this.los_y + 200], vel: [0, 0], radius: 20, color: "#00FF00", speed: 10 });
         this.receiver1 = new Receiver({ pos: [this.los_x - 400, this.los_y], radius: 20, color: "#00FF00", route: "curl", speed: 15, button: "a" });
         this.football = new Football({pos: [this.los_x, this.los_y], vel: [0, 50]})
+        this.receivers = [this.receiver1];
         this.skillPlayers = [this.quarterback, this.receiver1];
         this.allObjects = [this.center, this.quarterback, this.receiver1, this.football];
         this.presnap = true; // ball not snapped to begin game
         this.yardline = 30;
         // this.ballCarrier = null;
+    }
+
+    catchCheck(){
+        if (this.receivers.some((receiver) => Utils.arrEqual(receiver.options.pos, this.football.options.pos))){
+            this.football.options.vel = [0, 0]
+        } 
     }
 
     findBallCarrier(){
@@ -47,6 +54,7 @@ class Game{
                 this.football.options.vel = [0, 0];
             }
         }else {
+            this.catchCheck();
             this.allObjects.forEach(obj => {
                 obj.move();
             })
@@ -70,8 +78,14 @@ class Game{
 
     passBall(target_receiver){
         const ballCarrier = this.findBallCarrier();
+        if (!ballCarrier){
+            return;
+        }
+        target_receiver = this.receiver1;
         if(ballCarrier.options.canPass){
-            this.football.options.vel = [-15, -15];
+            // console.log(Utils.targetReceiverPosition(10, target_receiver));
+            this.football.options.vel = Utils.calculateFootBallVelocity(this.receiver1, this.football);
+            // this.football.options.vel = Utils.calculateFootballVelocity(target_receiver, this.football)
         }
     }
 }
