@@ -11,7 +11,10 @@ class GameView{
         key('down', () => this.game.moveBallCarrier("S"))
         key('left', () => this.game.moveBallCarrier("W"))
         key('right', () => this.game.moveBallCarrier("E"))
-        key('a', () => this.game.passBall("A"))
+        key('a', () => this.game.passBall("a"))
+        key('s', () => this.game.passBall("s"))
+        key('d', () => this.game.passBall("d"))
+        key('f', () => this.game.passBall("f"))
     }
 
     moveDraw(){

@@ -29,20 +29,21 @@ const Utils = {
     },
 
     targetReceiverPosition: (num_steps, receiver) => {
-        const current_x = receiver.options.pos[0]
-        const current_y = receiver.options.pos[1] 
+        let current_x = receiver.options.pos[0]
+        let current_y = receiver.options.pos[1] 
         const speed = receiver.options.speed;
         const vel = [receiver.options.vel[0], receiver.options.vel[1]]
-        const route = receiver.options.selected_route;
-        const route_step = receiver.options.route_step;
-        const distance_traveled = receiver.options.distance_traveled;
-        const max_steps = num_steps + route_step;
-        while(route_step <= max_steps){
+        const route = receiver.selected_route;
+        const mirror = receiver.options.mirror;
+        let route_step = receiver.route_step;
+        let distance_traveled = receiver.distance_traveled;
+        let num_iterations = 0
+        while(num_iterations < num_steps){
             if (route_step < route.length) {
                 const next_step = route[route_step]
                 if (Array.isArray(next_step)) {
-                    vel[0] = speed * this.route[route_step][0]
-                    vel[1] = speed * this.route[route_step][1]
+                    vel[0] = speed * route[route_step][0] * mirror;
+                    vel[1] = speed * route[route_step][1]
                     route_step++;
                 } else {
                     if (distance_traveled >= next_step) {
@@ -53,6 +54,7 @@ const Utils = {
             current_x += vel[0];
             current_y += vel[1];
             distance_traveled += speed;
+            num_iterations++;
         }
         return [current_x, current_y];
     },
