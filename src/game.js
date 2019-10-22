@@ -9,17 +9,17 @@ class Game{
         this.DIM_X = width;
         this.DIM_Y = height;
         // this.START_POS = [300, 250];
-        this.los_x = 600; // los = line of scrimmage
+        this.los_x = 650; // los = line of scrimmage
         this.los_y = 450;
         this.center = new OffensiveLineman({ pos: [this.los_x, this.los_y], vel: [0, 0], radius: 20, color: "#00FF00" });
         this.quarterback = new Quarterback({ pos: [this.los_x, this.los_y + 200], vel: [0, 0], radius: 20, color: "#00FF00", speed: 10 });
         // this.receiver1 = new Receiver({ pos: [this.los_x - 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 15, button: "a" });
         this.football = new Football({pos: [this.los_x, this.los_y], vel: [0, 50]})
         this.receivers = {
-            "a": new Receiver({ pos: [this.los_x - 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 15, mirror: 1}),
-            "s": new Receiver({ pos: [this.los_x - 300, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 25, mirror: 1}),
-            "d": new Receiver({ pos: [this.los_x + 300, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 10, mirror: -1}),
-            "f": new Receiver({ pos: [this.los_x + 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 15, mirror: -1})
+            "a": new Receiver({ pos: [this.los_x - 600, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 15, mirror: 1}),
+            "s": new Receiver({ pos: [this.los_x - 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 25, mirror: 1}),
+            "d": new Receiver({ pos: [this.los_x + 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 10, mirror: -1}),
+            "f": new Receiver({ pos: [this.los_x + 600, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 15, mirror: -1})
         };
         this.skillPlayers = [this.quarterback, ...Object.values(this.receivers)];
         this.allObjects = [this.center, this.quarterback, ...Object.values(this.receivers), this.football];
@@ -42,7 +42,7 @@ class Game{
     findBallCarrier(){
         let ballCarrier = null
         this.skillPlayers.forEach(player => {
-            if(player.options.pos[1] == this.football.options.pos[1]){
+            if(Utils.arrEqual(player.options.pos, this.football.options.pos)){
                 ballCarrier = player;
             }
         });
@@ -50,7 +50,7 @@ class Game{
     }
 
     draw(ctx){
-        ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+        ctx.clearRect(0, 0, this.DIM_X * 2, this.DIM_Y * 2);
         this.allObjects.forEach(obj => {
             obj.draw(ctx);
         })
