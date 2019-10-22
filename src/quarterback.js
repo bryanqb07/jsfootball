@@ -1,9 +1,9 @@
-import Player from './player';
+import OffensivePlayer from './offensive_player';
 
-class Quarterback extends Player{
+class Quarterback extends OffensivePlayer{
     constructor(options){
         super(options);
-        this.options.color = "#00FF00";
+        this.options.vel = [0,0] // pre-snap
         this.options.canPass = true;
     }
 }

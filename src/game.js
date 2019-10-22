@@ -3,6 +3,7 @@ import OffensiveLineman from './olineman';
 import Quarterback from './quarterback';
 import Receiver from './receiver';
 import Utils from './utils';
+import DefensiveBack from './defensive_back';
 
 class Game{
     constructor(width, height){
@@ -11,18 +12,21 @@ class Game{
         // this.START_POS = [300, 250];
         this.los_x = 650; // los = line of scrimmage
         this.los_y = 450;
-        this.center = new OffensiveLineman({ pos: [this.los_x, this.los_y], vel: [0, 0], radius: 20, color: "#00FF00" });
-        this.quarterback = new Quarterback({ pos: [this.los_x, this.los_y + 200], vel: [0, 0], radius: 20, color: "#00FF00", speed: 10 });
-        // this.receiver1 = new Receiver({ pos: [this.los_x - 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 15, button: "a" });
+        this.center = new OffensiveLineman({ pos: [this.los_x, this.los_y]});
+        this.quarterback = new Quarterback({ pos: [this.los_x, this.los_y + 200], speed: 10 });
         this.football = new Football({pos: [this.los_x, this.los_y], vel: [0, 50]})
         this.receivers = {
-            "a": new Receiver({ pos: [this.los_x - 600, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 15, mirror: 1}),
-            "s": new Receiver({ pos: [this.los_x - 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 25, mirror: 1}),
-            "d": new Receiver({ pos: [this.los_x + 400, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 10, mirror: -1}),
-            "f": new Receiver({ pos: [this.los_x + 600, this.los_y], radius: 20, color: "#00FF00", route: "slant", speed: 15, mirror: -1})
+            "a": new Receiver({ pos: [this.los_x - 600, this.los_y], route: "slant", speed: 15, mirror: 1}),
+            "s": new Receiver({ pos: [this.los_x - 400, this.los_y], route: "post", speed: 25, mirror: 1}),
+            "d": new Receiver({ pos: [this.los_x + 400, this.los_y], route: "go", speed: 10, mirror: -1}),
+            "f": new Receiver({ pos: [this.los_x + 600, this.los_y], route: "curl", speed: 15, mirror: -1})
         };
-        this.skillPlayers = [this.quarterback, ...Object.values(this.receivers)];
-        this.allObjects = [this.center, this.quarterback, ...Object.values(this.receivers), this.football];
+        this.defensive_backs = [
+            new DefensiveBack({ pos: [this.los_x - 600, this.los_y - 100], radius: 20, 
+                coverage: "man", speed: 25, target: this.receivers["a"], football: this.football })
+        ];
+        this.skillPlayers = [this.quarterback, ...Object.values(this.receivers), ...this.defensive_backs];
+        this.allObjects = [this.center, this.quarterback, ...Object.values(this.receivers), ...this.defensive_backs, this.football];
         this.presnap = true; // ball not snapped to begin game
         this.yardline = 30;
         this.buttonPressed = null;
@@ -33,6 +37,13 @@ class Game{
         Object.keys(this.receivers).forEach(key => {
             let receiver = this.receivers[key];
             if (Utils.arrEqual(receiver.options.pos, this.football.options.pos) && this.buttonPressed == key){
+                this.football.options.vel = receiver.options.vel;
+                this.buttonPressed = null;
+            }
+        });
+
+        this.defensive_backs.forEach(db => {
+            if (Utils.inArea(db.options.pos, this.football.options.pos, db.options.radius)){
                 this.football.options.vel = receiver.options.vel;
                 this.buttonPressed = null;
             }
@@ -66,7 +77,7 @@ class Game{
         }else {
             this.catchCheck();
             this.allObjects.forEach(obj => {
-                obj.move();
+                obj.move(this.buttonPressed);
             })
         }
     }
@@ -90,7 +101,7 @@ class Game{
         if(ballCarrier.options.canPass){
             const target_receiver = this.receivers[button];
             this.buttonPressed = button;
-            this.football.options.vel = Utils.calculateFootBallVelocity(target_receiver, this.football);
+            this.football.options.vel = Utils.changeVelocity(target_receiver, this.football, 0);
         }
     }
 }

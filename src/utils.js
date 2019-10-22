@@ -11,13 +11,17 @@ const Utils = {
         STOP: [0, 0]
     },
 
-    calculateFootBallVelocity: (receiver, football) => {
+    arrEqual: (arr1, arr2) => {
+        return arr1[0] == arr2[0] && arr1[1] == arr2[1]
+    },
+
+    changeVelocity: (receiver, obj, differential) => {
         // const ballSpeed = 30;
         const steps = 10;
         const targetPosition = Utils.targetReceiverPosition(steps, receiver);
-        const currentPosition = football.options.pos;
+        const currentPosition = obj.options.pos;
         const dx = targetPosition[0] - currentPosition[0];
-        const dy = targetPosition[1] - currentPosition[1];
+        const dy = targetPosition[1] + differential - currentPosition[1];
         // const factor = ballSpeed / (dx * dx + dy * dy);
         return [dx / steps, dy / steps];
     },
@@ -27,6 +31,10 @@ const Utils = {
         const dy = pos1[1] - pos2[1];
         return Math.sqrt(dx * dx + dy * dy);
     },
+
+    inArea: (pos1, pos2, radius) => {
+        pos2[0] <= pos1[0] + radius && pos2[1] <= pos2[1] + radius;
+     },
 
     targetReceiverPosition: (num_steps, receiver) => {
         let current_x = receiver.options.pos[0]
@@ -59,9 +67,7 @@ const Utils = {
         return [current_x, current_y];
     },
 
-    arrEqual: (arr1, arr2) => {
-        return arr1[0] == arr2[0] && arr1[1] == arr2[1]
-    }
+
 }
 
 

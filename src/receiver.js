@@ -1,11 +1,10 @@
-import Player from './player';
+import OffensivePlayer from './offensive_player';
 import Utils from './utils';
 
 
-class Receiver extends Player{
+class Receiver extends OffensivePlayer{
     constructor(options){
         super(options);
-        this.options.color = "#00FF00";
         this.options.vel = [0, -this.options.speed];
         this.routes = {
             slant: [ this.options.speed * 2, Utils.DIRS.NE ],
